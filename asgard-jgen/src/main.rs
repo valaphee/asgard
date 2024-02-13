@@ -4,12 +4,15 @@ fn main() {
     let input = std::fs::read("/home/valaphee/Documents/asgard-example/build/classes/java/main/com/valaphee/asgard/example/CallMe.class").unwrap();
     let class_file = ClassFile::decode(&mut input.as_ref()).unwrap();
 
-    let class_name: &String = match &class_file.constant_pool[(class_file.this_class - 1) as usize] {
-        ConstantPoolInfo::Class { name_index } => match &class_file.constant_pool[(name_index - 1) as usize] {
-            ConstantPoolInfo::Utf8(value) => value,
-            _ => todo!()
+    let class_name: &String = match &class_file.constant_pool[(class_file.this_class - 1) as usize]
+    {
+        ConstantPoolInfo::Class { name_index } => {
+            match &class_file.constant_pool[(name_index - 1) as usize] {
+                ConstantPoolInfo::Utf8(value) => value,
+                _ => todo!(),
+            }
         }
-        _ => todo!()
+        _ => todo!(),
     };
     let class_name_without_path = class_name.rsplit("/").next().unwrap();
 
@@ -23,12 +26,13 @@ fn main() {
 
         let method_name = match &class_file.constant_pool[(method.name_index - 1) as usize] {
             ConstantPoolInfo::Utf8(value) => value,
-            _ => todo!()
+            _ => todo!(),
         };
-        let method_descriptor_raw = match &class_file.constant_pool[(method.descriptor_index - 1) as usize] {
-            ConstantPoolInfo::Utf8(value) => value,
-            _ => todo!()
-        };
+        let method_descriptor_raw =
+            match &class_file.constant_pool[(method.descriptor_index - 1) as usize] {
+                ConstantPoolInfo::Utf8(value) => value,
+                _ => todo!(),
+            };
         let method_descriptor: MethodDescriptor = method_descriptor_raw.parse().unwrap();
 
         if method_name == "<init>" {
@@ -59,7 +63,7 @@ r#"fn new() -> Self {{
             };
             let rust_conv = match method_descriptor.return_type {
                 asgard_jbc::FieldType::Boolean => " != 0",
-                _ => ""
+                _ => "",
             };
             let method_call = match method_descriptor.return_type {
                 asgard_jbc::FieldType::Byte => "CallByteMethodA",
@@ -75,8 +79,10 @@ r#"fn new() -> Self {{
                 asgard_jbc::FieldType::Void => "CallVoidMethodA",
             };
 
-            method_descriptor.parameter_types.iter().map(|parameter_type| {
-                match parameter_type {
+            method_descriptor
+                .parameter_types
+                .iter()
+                .map(|parameter_type| match parameter_type {
                     asgard_jbc::FieldType::Byte => "i8",
                     asgard_jbc::FieldType::Char => "u16",
                     asgard_jbc::FieldType::Double => "f64",
@@ -87,12 +93,11 @@ r#"fn new() -> Self {{
                     asgard_jbc::FieldType::Short => "i16",
                     asgard_jbc::FieldType::Boolean => "bool",
                     asgard_jbc::FieldType::Array(_) => todo!(),
-                    _ => unreachable!()
-                }
-            });
+                    _ => unreachable!(),
+                });
 
             overridable_methods.push(format!(
-r#"fn {method_name}(&self) -> {rust_type} {{
+                r#"fn {method_name}(&self) -> {rust_type} {{
         self.object().{method_name}()
     }}"#
             ));
@@ -112,7 +117,7 @@ r#"fn {method_name}(&self) -> {rust_type} {{
 
     let overridable_methods = overridable_methods.join("\n\n    ");
     println!(
-r#"pub trait {class_name_without_path} {{
+        r#"pub trait {class_name_without_path} {{
     fn object(&self) -> impl {class_name_without_path};
 
     {overridable_methods}
@@ -120,20 +125,20 @@ r#"pub trait {class_name_without_path} {{
     );
 
     println!(
-r#"#[derive(Copy, Clone)]
+        r#"#[derive(Copy, Clone)]
 pub struct {class_name_without_path}Object(pub asgard_jni::jobject);"#
     );
 
     let methods = methods.join("\n\n    ");
     println!(
-r#"impl {class_name_without_path}Object {{
+        r#"impl {class_name_without_path}Object {{
     {methods}
 }}"#
     );
 
     let overridable_method_bodies = overridable_method_bodies.join("\n\n    ");
     println!(
-r#"impl {class_name_without_path} for {class_name_without_path}Object {{
+        r#"impl {class_name_without_path} for {class_name_without_path}Object {{
     fn object(&self) -> impl {class_name_without_path} {{
         *self
     }}

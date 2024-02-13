@@ -33,12 +33,12 @@ impl FieldType {
                 *s = &s[class_name_end + 1..];
                 let class_name = &s[..class_name_end];
                 Self::Object(class_name.to_owned())
-            },
+            }
             'S' => Self::Short,
             'Z' => Self::Boolean,
             '[' => Self::Array(Box::new(s.parse()?)),
             'V' => Self::Void,
-            _ => todo!()
+            _ => todo!(),
         })
     }
 }

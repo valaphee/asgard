@@ -26,7 +26,7 @@ impl Decode for MethodParameter {
         let access_flags = MethodParameterAccessFlags::from_bits(u16::decode(input)?).unwrap();
         Ok(Self {
             name_index,
-            access_flags
+            access_flags,
         })
     }
 }

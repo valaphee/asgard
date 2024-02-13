@@ -38,7 +38,7 @@ impl Decode for ClassFile {
         for _ in 0..interfaces_count {
             interfaces.push(Decode::decode(input)?);
         }
-        
+
         let fields_count = u16::decode(input)?;
         let mut fields = Vec::with_capacity(fields_count as usize);
         for _ in 0..fields_count {
@@ -178,7 +178,7 @@ impl Decode for ConstantPoolInfo {
             20 => ConstantPoolInfo::Package {
                 name_index: Decode::decode(input)?,
             },
-            _ => todo!()
+            _ => todo!(),
         };
         Ok(info)
     }
@@ -190,7 +190,7 @@ bitflags! {
         const PUBLIC = 0x0001;
         const FINAL = 0x0010;
         const SUPER = 0x0020;
-        const INTERFACE = 0x0200;        
+        const INTERFACE = 0x0200;
         const SYNTHETIC = 0x1000;
         const ANNOTATION = 0x2000;
         const ENUM = 0x4000;
@@ -288,7 +288,7 @@ bitflags! {
 #[derive(Debug)]
 pub struct AttributeInfo {
     pub attribute_name_index: u16,
-    pub info: Vec<u8>
+    pub info: Vec<u8>,
 }
 
 impl Decode for AttributeInfo {
