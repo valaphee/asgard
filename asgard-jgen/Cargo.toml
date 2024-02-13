@@ -1,0 +1,8 @@
+[package]
+name = "asgard-jgen"
+version = "0.1.0"
+edition = "2021"
+description = "Java interface generator for Rust"
+
+[dependencies]
+asgard-jbc = { path = "../asgard-jbc" }

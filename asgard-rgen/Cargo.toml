@@ -1,0 +1,7 @@
+[package]
+name = "asgard-rgen"
+version = "0.1.0"
+edition = "2021"
+description = "Rust generator for Java"
+
+[dependencies]

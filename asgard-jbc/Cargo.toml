@@ -1,0 +1,10 @@
+[package]
+name = "asgard-jbc"
+version = "0.1.0"
+edition = "2021"
+description = "Java bytecode marshalling library"
+
+[dependencies]
+bitflags = "2.4.2"
+byteorder = "1.5"
+thiserror = "1.0"

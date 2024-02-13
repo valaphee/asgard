@@ -1,0 +1,13 @@
+[package]
+name = "asgard-jni"
+version = "0.1.0"
+edition = "2021"
+description = "Java native interface"
+
+[dependencies]
+
+[build-dependencies]
+bindgen = "0.69"
+
+[lib]
+crate-type = ["dylib"]
